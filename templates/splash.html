@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}音で探す、西山公園{% endblock %}
+{% block shell_class %}splash-shell{% endblock %}
+{% block content %}
+<section class="splash-screen">
+  <img class="official-logo splash-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="アプリロゴ" onerror="this.style.display='none'">
+  <a class="btn btn-accent splash-start" href="{{ url_for('main.home') }}">はじめる <i class="bi bi-arrow-right"></i></a>
+</section>
+{% endblock %}
+{% block scripts %}{% endblock %}

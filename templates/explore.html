@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}探索中 | レッツさぁ西山！{% endblock %}
+{% block content %}
+<header class="topbar">
+  <a class="icon-button" href="{{ url_for('main.mission') }}" aria-label="戻る"><i class="bi bi-arrow-left"></i></a>
+  <span class="topbar-label">探索中</span>
+  <span class="gps-status"><i class="bi bi-broadcast"></i> 現在地</span>
+</header>
+<section class="explore-visual photo-{{ spot.id if spot else 1 }} animate-fade-in">
+  <div class="explore-map-label">西山公園<br><small>スポットをめざそう</small></div>
+  <div class="walkway-shade">
+    <span>{{ spot.category if spot else '西山公園' }}の近く</span>
+    <small>音のする方へ歩いてみよう</small>
+  </div>
+</section>
+<section class="distance-panel animate-slide-up">
+  <p class="eyebrow">スポットまで</p>
+  <div class="distance-value">
+    <strong id="distance-value">--</strong><span>m</span>
+  </div>
+  <p id="location-message" class="muted">現在地を取得しています...</p>
+  {% if spot %}<button class="play-button explore-play-button" data-audio="{{ spot.audio }}" aria-label="スポットの音を聞く"><i class="bi bi-play-fill"></i> 音を聞く</button>{% endif %}
+  <p class="small muted">位置情報は発見判定のみに使用し、移動履歴は保存しません。</p>
+  <div class="progress progress-tall">
+    <div id="distance-progress" class="progress-bar" style="width: 25%"></div>
+  </div>
+  <button id="locate-button" class="btn btn-primary w-100 mt-3" data-spot-id="{{ spot.id if spot else '' }}">
+    <i class="bi bi-crosshair"></i> 現在地を更新
+  </button>
+  <button class="btn btn-outline-primary w-100 mt-3" type="button" id="reveal-hint-button" aria-expanded="false" aria-controls="explore-hint">
+    <i class="bi bi-lightbulb"></i> 手掛かり希望
+  </button>
+  <div class="distance-clue mt-3" id="explore-hint" hidden>
+    <p id="distance-clue-label" class="eyebrow">手がかり</p>
+    <p id="distance-clue-text">現在地を確認すると手がかりが表示されます。</p>
+    {% if spot and spot.id in [4, 9] %}{% include 'partials/ftas_credit.html' %}{% endif %}
+    {% if spot and spot.id in [4, 6] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>window.exploreConfig = { spotId: {{ spot.id if spot else 'null' }}, discoverUrl: "{{ url_for('api.discover_api') }}" };</script>
+{% endblock %}

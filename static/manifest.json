@@ -1,0 +1,16 @@
+{
+  "name": "レッツさぁ西山！",
+  "short_name": "レッツさぁ西山！",
+  "description": "音をたよりに、西山公園の魅力を見つけよう",
+  "start_url": "/home",
+  "display": "standalone",
+  "background_color": "#FFF8FA",
+  "theme_color": "#EC407A",
+  "lang": "ja",
+  "icons": [{
+    "src": "/static/img/logo.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any maskable"
+  }]
+}

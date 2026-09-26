@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}バッジ | レッツさぁ西山！{% endblock %}
+{% block content %}
+<header class="topbar">
+  <a class="icon-button" href="{{ url_for('main.home') }}" aria-label="戻る"><i class="bi bi-arrow-left"></i></a>
+  <span class="topbar-label">集めたバッジ</span>
+  <span></span>
+</header>
+<section class="badge-header">
+  <p class="eyebrow accent-text">西山公園の記録</p>
+  <h1>歩いた分だけ、<br>西山公園の称号。</h1>
+</section>
+<div class="badge-list">
+  {% for badge in badges %}
+  {% set unlocked = found >= badge.unlock_count %}
+  <article class="badge-card {% if not unlocked %}locked-badge{% endif %}">
+    <div class="large-badge">{{ badge.name.split(' ')[0] }}</div>
+    <div>
+      <h2>{{ badge.name }}</h2>
+      <p>{{ badge.description }}</p>
+      <div class="progress progress-tiny">
+        <div class="progress-bar" style="width: {{ [found / badge.unlock_count * 100, 100]|min }}%"></div>
+      </div>
+    </div>
+    <i class="bi bi-lock-fill badge-lock {% if unlocked %}d-none{% endif %}"></i>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}

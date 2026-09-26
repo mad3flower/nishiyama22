@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}今日の音 | レッツさぁ西山！{% endblock %}
+{% block content %}
+<header class="topbar">
+  <a class="icon-button" href="{{ url_for('main.home') }}" aria-label="戻る"><i class="bi bi-arrow-left"></i></a>
+  <span class="topbar-label">今日の音</span>
+  <span class="step-count">音さがし</span>
+</header>
+{% if spot %}
+<div class="mission-photo photo-{{ spot.id }}"><span>{{ spot.category }}</span><strong class="difficulty-badge">見つけやすさ Lv.{{ spot.difficulty }}</strong></div>
+<section class="mission-intro animate-fade-in">
+  <p class="eyebrow accent-text">今日の音</p>
+  <div class="sound-wave">
+    <i class="bi bi-soundwave"></i>
+    <span></span><span></span><span></span><span></span>
+    <button class="play-button" data-audio="{{ spot.audio }}" aria-label="音を聞く"><i class="bi bi-play-fill"></i></button>
+  </div>
+</section>
+<a class="btn btn-primary btn-lg w-100 mt-3" href="{{ url_for('main.explore') }}">この場所を探す <i class="bi bi-crosshair"></i></a>
+{% else %}
+<section class="empty-state">
+  <i class="bi bi-stars"></i>
+  <h1>全スポット発見！</h1>
+  <p>西山公園の音の図鑑をコンプリートしました。</p>
+  <a class="btn btn-primary" href="{{ url_for('main.collection') }}">図鑑を見る</a>
+</section>
+{% endif %}
+{% endblock %}

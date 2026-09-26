@@ -1,0 +1,6 @@
+<nav class="bottom-nav" aria-label="メインナビゲーション">
+  <a href="{{ url_for('main.home') }}" class="{% if request.endpoint == 'main.home' %}active{% endif %}"><i class="bi bi-house-fill"></i><span>ホーム</span></a>
+  <a href="{{ url_for('main.mission') }}" class="{% if request.endpoint == 'main.mission' %}active{% endif %}"><i class="bi bi-compass-fill"></i><span>ミッション</span></a>
+  <a href="{{ url_for('main.collection') }}" class="{% if request.endpoint == 'main.collection' %}active{% endif %}"><i class="bi bi-book-half"></i><span>図鑑</span></a>
+  <a href="{{ url_for('main.settings') }}" class="{% if request.endpoint == 'main.settings' %}active{% endif %}"><i class="bi bi-gear-fill"></i><span>設定</span></a>
+</nav>
