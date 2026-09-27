@@ -82,10 +82,8 @@ def check_location():
     spot = Spot.query.get_or_404(data.get("spot_id"))
     try:
         # ブラウザから届いた実際の現在地と、スポットの座標を比較します。
-        # latitude = float(data["lat"])
-        # longitude = float(data["lng"])
-        latitude =35.948581
-        longitude = 136.181123
+        latitude = float(data["lat"])
+        longitude = float(data["lng"])
 
         if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
             raise ValueError("座標が範囲外です")
