@@ -6,7 +6,7 @@
   <span class="topbar-label">見つけたスポット</span>
   <span class="spot-number">#{{ '%02d'|format(spot.id) }}</span>
 </header>
-<section class="detail-photo photo-{{ spot.id }}"><span>{{ spot.category }}</span></section>
+<section class="detail-photo" style="background-image: url('{{ url_for('static', filename='img/' ~ spot.image) }}')"><span>{{ spot.category }}</span></section>
 <section class="detail-copy">
   <p class="eyebrow">スポット図鑑</p>
   <h1>{{ spot.name }}</h1>
@@ -15,7 +15,8 @@
   <hr>
   <p class="eyebrow">もっと知る</p>
   <p class="lead">{{ spot.fact }}</p>
-  {% if spot.id in [6, 7, 9] %}{% include 'partials/open_data_credit.html' %}{% endif %}
-  {% if spot.id in [4, 6] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+  {% if spot.id in [2, 3, 4] %}{% include 'partials/open_data_credit.html' %}{% endif %}
+  {% if spot.id in [3, 5] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+  {% if spot.id in [2, 6] %}{% include 'partials/ftas_credit.html' %}{% endif %}
 </section>
 {% endblock %}

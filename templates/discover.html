@@ -6,7 +6,7 @@
   <span></span><span></span><span></span><span></span><span></span>
 </div>
 <p class="bloom-message">開花が進みました！</p>
-<div class="discover-photo photo-{{ spot.id }}"><span>{{ spot.category }}</span></div>
+<div class="discover-photo" style="background-image: url('{{ url_for('static', filename='img/' ~ spot.image) }}')"><span>{{ spot.category }}</span></div>
 <section class="discover-screen animate-scale-in">
   <div class="confetti-mark"><i class="bi bi-stars"></i></div>
   <p class="eyebrow accent-text">スポット発見！</p>
@@ -16,8 +16,9 @@
   <p class="muted">{{ spot.category }} / 西山公園</p>
   <div class="discovery-message">{% if is_new %}図鑑を更新しました{% else %}このスポットは図鑑に登録済みです{% endif %}</div>
   <div class="fact-callout"><i class="bi bi-lightbulb-fill"></i><div><strong>豆知識</strong><p>{{ spot.fact }}</p></div></div>
-  {% if spot.id in [6, 7, 9] %}{% include 'partials/open_data_credit.html' %}{% endif %}
-  {% if spot.id in [4, 6] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+  {% if spot.id in [2, 3, 4] %}{% include 'partials/open_data_credit.html' %}{% endif %}
+  {% if spot.id in [3, 5] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+  {% if spot.id in [2, 6] %}{% include 'partials/ftas_credit.html' %}{% endif %}
   <a class="btn btn-accent btn-lg w-100" href="{{ url_for('main.spot_detail', spot_id=spot.id) }}">見どころを見る <i class="bi bi-arrow-right"></i></a>
   <a class="back-link" href="{{ url_for('main.collection') }}">図鑑に戻る</a>
 </section>

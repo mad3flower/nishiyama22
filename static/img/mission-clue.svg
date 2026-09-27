@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-label="音の波を表すイラスト">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8F204E"/>
+      <stop offset="1" stop-color="#EC407A"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop stop-color="#FFE082" stop-opacity=".32"/><stop offset="1" stop-color="#FFE082" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="600" rx="52" fill="url(#bg)"/>
+  <circle cx="600" cy="300" r="270" fill="url(#glow)"/>
+  <g fill="none" stroke="#fff" stroke-linecap="round" opacity=".9">
+    <path d="M275 300h65l52-94 78 188 78-282 104 376 82-282 68 188 48-94h75" stroke-width="17"/>
+    <circle cx="600" cy="300" r="214" stroke-width="3" opacity=".25"/>
+    <circle cx="600" cy="300" r="258" stroke-width="3" opacity=".18"/>
+  </g>
+  <circle cx="600" cy="300" r="17" fill="#FFE082"/>
+</svg>

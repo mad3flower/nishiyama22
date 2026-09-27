@@ -6,7 +6,7 @@
   <span class="topbar-label">探索中</span>
   <span class="gps-status"><i class="bi bi-broadcast"></i> 現在地</span>
 </header>
-<section class="explore-visual photo-{{ spot.id if spot else 1 }} animate-fade-in">
+<section class="explore-visual animate-fade-in" style="background-image: url('{{ url_for('static', filename='img/mission-clue.svg') }}')">
   <div class="explore-map-label">西山公園<br><small>スポットをめざそう</small></div>
   <div class="walkway-shade">
     <span>{{ spot.category if spot else '西山公園' }}の近く</span>
@@ -33,8 +33,9 @@
   <div class="distance-clue mt-3" id="explore-hint" hidden>
     <p id="distance-clue-label" class="eyebrow">手がかり</p>
     <p id="distance-clue-text">現在地を確認すると手がかりが表示されます。</p>
-    {% if spot and spot.id in [4, 9] %}{% include 'partials/ftas_credit.html' %}{% endif %}
-    {% if spot and spot.id in [4, 6] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+    {% if spot and spot.id in [2, 6] %}{% include 'partials/ftas_credit.html' %}{% endif %}
+    {% if spot and spot.id in [3, 5] %}{% include 'partials/odp_dashboard_credit.html' %}{% endif %}
+    {% if spot and spot.id in [2, 3, 4] %}{% include 'partials/open_data_credit.html' %}{% endif %}
   </div>
 </section>
 {% endblock %}

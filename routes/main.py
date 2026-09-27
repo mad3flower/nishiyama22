@@ -88,7 +88,7 @@ def collection():
 def badges():
     # 現在の発見数を使って、バッジの解放状態を表示します。
     found = len(discovered_ids())
-    badge_order = {1: 0, 6: 1, 3: 2, 11: 3}
+    badge_order = {1: 0, 4: 1, 6: 2, 8: 3}
     all_badges = sorted(Badge.query.all(), key=lambda b: badge_order.get(b.unlock_count, 99))
     return render_template("badges.html", badges=all_badges, found=found)
 

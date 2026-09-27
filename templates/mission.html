@@ -7,7 +7,7 @@
   <span class="step-count">音さがし</span>
 </header>
 {% if spot %}
-<div class="mission-photo photo-{{ spot.id }}"><span>{{ spot.category }}</span><strong class="difficulty-badge">見つけやすさ Lv.{{ spot.difficulty }}</strong></div>
+<div class="mission-photo" style="background-image: url('{{ url_for('static', filename='img/mission-clue.svg') }}')"><span>{{ spot.category }}</span><strong class="difficulty-badge">見つけやすさ Lv.{{ spot.difficulty }}</strong></div>
 <section class="mission-intro animate-fade-in">
   <p class="eyebrow accent-text">今日の音</p>
   <div class="sound-wave">
