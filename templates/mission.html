@@ -10,10 +10,21 @@
 <div class="mission-photo" style="background-image: url('{{ url_for('static', filename='img/mission-clue.svg') }}')"><span>{{ spot.category }}</span><strong class="difficulty-badge">見つけやすさ Lv.{{ spot.difficulty }}</strong></div>
 <section class="mission-intro animate-fade-in">
   <p class="eyebrow accent-text">今日の音</p>
-  <div class="sound-wave">
-    <i class="bi bi-soundwave"></i>
-    <span></span><span></span><span></span><span></span>
-    <button class="play-button" data-audio="{{ spot.audio }}" aria-label="音を聞く"><i class="bi bi-play-fill"></i></button>
+  <p class="mission-audio-help">3つの音声から1つを選んで再生できます。</p>
+  <div class="mission-audio-picker" id="mission-audio-picker">
+    {% for option in selected_audio_options %}
+    <label class="mission-audio-row">
+      <input class="mission-audio-choice" type="radio" name="mission-audio" value="{{ option.audio }}" data-description="{{ option.description }}" {% if loop.first %}checked{% endif %}>
+      <span>{{ option.label }}</span>
+    </label>
+    {% endfor %}
+    <div class="mission-audio-actions">
+      <button class="btn btn-primary" id="play-mission-audio" type="button"><i class="bi bi-play-fill"></i> 選んだ音声を再生</button>
+    </div>
+    <div class="mission-audio-playback">
+      <p class="mission-audio-status" id="mission-audio-status" aria-live="polite"></p>
+      <p class="mission-audio-description" id="mission-audio-description" aria-live="polite"></p>
+    </div>
   </div>
 </section>
 <a class="btn btn-primary btn-lg w-100 mt-3" href="{{ url_for('main.explore') }}">この場所を探す <i class="bi bi-crosshair"></i></a>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">道の駅 西山公園 入場者数</title>
+  <desc id="desc">令和6年度は341,657人、令和7年度は339,716人。年度は4月から翌年3月まで。</desc>
+  <rect width="1200" height="720" fill="#f6f8fb"/>
+  <g font-family="'Noto Sans JP','Yu Gothic',sans-serif" fill="#18263e"><text x="90" y="99" font-size="48" font-weight="700">道の駅 西山公園 入場者数</text><text x="92" y="147" font-size="27" fill="#63748e">年度別 合計</text></g>
+  <g stroke="#d9e0e9" stroke-width="1.5"><path d="M160 221H1040"/><path d="M160 314H1040"/><path d="M160 406H1040"/><path d="M160 499H1040"/></g>
+  <g font-family="'Noto Sans JP','Yu Gothic',sans-serif" fill="#687a95" font-size="21" text-anchor="end"><text x="148" y="227">400,000</text><text x="148" y="320">300,000</text><text x="148" y="412">200,000</text><text x="148" y="505">100,000</text></g>
+  <path d="M160 591H1040" stroke="#8592a5" stroke-width="2"/><rect x="390" y="274" width="181" height="317" rx="20" fill="#407bb9"/><rect x="760" y="276" width="181" height="315" rx="20" fill="#ef9b3e"/>
+  <g font-family="'Noto Sans JP','Yu Gothic',sans-serif" fill="#18263e" font-size="40" font-weight="700" text-anchor="middle"><text x="480" y="229">341,657 人</text><text x="850" y="231">339,716 人</text></g>
+  <g font-family="'Noto Sans JP','Yu Gothic',sans-serif" fill="#34445e" font-size="27" text-anchor="middle"><text x="480" y="640">令和6年度</text><text x="850" y="640">令和7年度</text></g>
+  <text x="90" y="684" font-family="'Noto Sans JP','Yu Gothic',sans-serif" fill="#71829d" font-size="21">年度は4月から翌年3月まで</text>
+</svg>

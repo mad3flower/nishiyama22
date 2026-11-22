@@ -7,6 +7,60 @@
     window.setTimeout(() => element.classList.remove('show'), 2600);
   };
 
+  const audioPicker = document.querySelector('#mission-audio-picker');
+  if (audioPicker) {
+    const playButton = document.querySelector('#play-mission-audio');
+    const status = document.querySelector('#mission-audio-status');
+    const description = document.querySelector('#mission-audio-description');
+    let currentAudio = null;
+    const hideDescription = () => {
+      description.hidden = true;
+      description.textContent = '';
+    };
+    const showDescription = (choice) => {
+      description.textContent = `音のようす：${choice.dataset.description}`;
+      description.hidden = false;
+    };
+    hideDescription();
+
+    playButton.addEventListener('click', async () => {
+      const selected = audioPicker.querySelector('.mission-audio-choice:checked');
+      if (!selected) {
+        status.textContent = '再生する音声を選んでください。';
+        return;
+      }
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      const audio = new Audio(`/static/audio/${encodeURIComponent(selected.value)}`);
+      currentAudio = audio;
+      status.textContent = `${selected.closest('.mission-audio-row').querySelector('span').textContent} を再生中…`;
+      showDescription(selected);
+      audio.addEventListener('ended', () => {
+        if (currentAudio === audio) {
+          currentAudio = null;
+          status.textContent = '再生が終わりました。';
+          hideDescription();
+        }
+      }, { once: true });
+      audio.addEventListener('error', () => {
+        if (currentAudio === audio) {
+          currentAudio = null;
+          status.textContent = '音声を再生できませんでした。';
+          hideDescription();
+        }
+      }, { once: true });
+      try {
+        await audio.play();
+      } catch (_error) {
+        status.textContent = '音声を再生できませんでした。';
+        if (currentAudio === audio) currentAudio = null;
+        hideDescription();
+      }
+    });
+  }
+
   document.querySelectorAll('.play-button').forEach((button) => {
     const audioName = button.dataset.audio;
     const audio = new Audio(`/static/audio/${encodeURIComponent(audioName)}`);

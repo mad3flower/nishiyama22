@@ -19,7 +19,24 @@
     <strong id="distance-value">--</strong><span>m</span>
   </div>
   <p id="location-message" class="muted">現在地を取得しています...</p>
-  {% if spot %}<button class="play-button explore-play-button" data-audio="{{ spot.audio }}" aria-label="スポットの音を聞く"><i class="bi bi-play-fill"></i> 音を聞く</button>{% endif %}
+  {% if spot %}
+  <div class="explore-audio-picker mission-audio-picker" id="mission-audio-picker">
+    <p class="mission-audio-help">3つの音声から1つを選んで再生できます。</p>
+    {% for option in selected_audio_options %}
+    <label class="mission-audio-row">
+      <input class="mission-audio-choice" type="radio" name="mission-audio" value="{{ option.audio }}" data-description="{{ option.description }}" {% if loop.first %}checked{% endif %}>
+      <span>{{ option.label }}</span>
+    </label>
+    {% endfor %}
+    <div class="mission-audio-actions">
+      <button class="btn btn-primary" id="play-mission-audio" type="button"><i class="bi bi-play-fill"></i> 選んだ音声を再生</button>
+    </div>
+    <div class="mission-audio-playback">
+      <p class="mission-audio-status" id="mission-audio-status" aria-live="polite"></p>
+      <p class="mission-audio-description" id="mission-audio-description" aria-live="polite"></p>
+    </div>
+  </div>
+  {% endif %}
   <p class="small muted">位置情報は発見判定のみに使用し、移動履歴は保存しません。</p>
   <div class="progress progress-tall">
     <div id="distance-progress" class="progress-bar" style="width: 25%"></div>

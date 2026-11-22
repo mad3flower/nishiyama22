@@ -1,10 +1,39 @@
 {% extends 'base.html' %}
-{% block title %}音で探す、西山公園{% endblock %}
+{% block title %}西山公園へようこそ{% endblock %}
 {% block shell_class %}splash-shell{% endblock %}
 {% block content %}
 <section class="splash-screen">
+  {% if not show_login and not show_register %}
   <img class="official-logo splash-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="アプリロゴ" onerror="this.style.display='none'">
-  <a class="btn btn-accent splash-start" href="{{ url_for('main.home') }}">はじめる <i class="bi bi-arrow-right"></i></a>
+  {% endif %}
+  {% if show_login or show_register %}
+  <div class="login-card">
+    <h1>{% if show_register %}新規アカウント作成{% else %}ログイン{% endif %}</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<p class="login-error" role="alert">{{ message }}</p>{% endfor %}
+    {% endwith %}
+    <form method="post" action="{{ url_for('main.register' if show_register else 'main.login') }}" class="login-form">
+      <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+      <label for="email">メールアドレス</label>
+      <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" value="{{ request.form.get('email', '') }}">
+      <label for="password">パスワード（8文字以上）</label>
+      <input id="password" name="password" type="password" autocomplete="{% if show_register %}new-password{% else %}current-password{% endif %}" required minlength="8">
+      {% if show_register %}
+      <label for="password_confirm">パスワード（確認）</label>
+      <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required minlength="8">
+      <button class="btn btn-accent" type="submit">アカウントを作成</button>
+      {% else %}
+      <button class="btn btn-accent" type="submit">ログイン</button>
+      <a class="btn btn-register text-center" href="{{ url_for('main.register') }}">新規アカウントを作成</a>
+      {% endif %}
+    </form>
+    <a class="login-back" href="{{ url_for('main.login') if show_register else url_for('main.splash') }}">{% if show_register %}ログイン画面へ戻る{% else %}トップに戻る{% endif %}</a>
+  </div>
+  {% else %}
+  <div class="splash-actions">
+    <a class="btn btn-accent splash-start" href="{{ url_for('main.login') }}">始める <i class="bi bi-arrow-right"></i></a>
+  </div>
+  {% endif %}
 </section>
 {% endblock %}
 {% block scripts %}{% endblock %}

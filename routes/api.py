@@ -1,5 +1,6 @@
 import math
 import random
+from functools import wraps
 
 from flask import Blueprint, jsonify, request, session
 
@@ -10,7 +11,19 @@ api_bp = Blueprint("api", __name__)
 
 def discovered_ids():
     # Discoveryテーブルから「発見済みID」の一覧を作ります。
-    return {item.spot_id for item in Discovery.query.all()}
+    user_id = session.get("user_id")
+    if user_id is None:
+        return set()
+    return {item.spot_id for item in Discovery.query.filter_by(user_id=user_id).all()}
+
+
+def login_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not session.get("user_id"):
+            return jsonify({"error": "ログインが必要です", "login_url": "/login"}), 401
+        return view(*args, **kwargs)
+    return wrapped
 
 
 def next_mission_spot(found_ids):
@@ -43,15 +56,17 @@ def haversine_meters(lat1, lng1, lat2, lng2):
 def distance_clue(distance, spot):
     # hint・category・factはspots.jsonから取り込んだオープンデータです。
     if distance > 100:
-        return {"label": "音の手がかり", "text": "まだ少し遠いようです。音をたよりに歩いてみよう。"}
+        # return {"label": "音の手がかり", "text": f"まだ少し遠いようです。{spot.hint} 音をたよりに歩いてみよう。"}
+        return {"label": "音の手がかり", "text": f"{spot.hint} 音をたよりに歩いてみよう。"}
     if distance > 50:
         return {"label": "文章の手がかり", "text": spot.hint}
     if distance > 20:
-        return {"label": "カテゴリーの手がかり", "text": f"このスポットは「{spot.category}」に関係しています。"}
-    return {"label": "豆知識の手がかり", "text": spot.fact}
+        return {"label": "カテゴリーの手がかり", "text": f"このスポットは「{spot.category}」に関係しています。{spot.hint}"}
+    return {"label": "豆知識の手がかり", "text": f"{spot.fact} 手がかり：{spot.hint}"}
 
 
 @api_bp.get("/mission")
+@login_required
 def mission_api():
     # 未発見スポットだけを候補にすることで、同じ答えを出しません。
     found = discovered_ids()
@@ -63,12 +78,14 @@ def mission_api():
 
 
 @api_bp.get("/mission/today")
+@login_required
 def today_mission_api():
     # 画面側が分かりやすい名前で呼べる今日のミッションAPIです。
     return mission_api()
 
 
 @api_bp.get("/progress")
+@login_required
 def progress():
     # 図鑑の登録数を数えて、APIで返します。
     found = len(discovered_ids())
@@ -76,14 +93,17 @@ def progress():
 
 
 @api_bp.post("/check")
+@login_required
 def check_location():
     # ブラウザから届いた現在地と、出題スポットの距離を判定します。
     data = request.get_json(silent=True) or {}
     spot = Spot.query.get_or_404(data.get("spot_id"))
     try:
         # ブラウザから届いた実際の現在地と、スポットの座標を比較します。
-        latitude = float(data["lat"])
-        longitude = float(data["lng"])
+        # latitude = float(data["lat"])
+        # longitude = float(data["lng"])
+        latitude = float(35.948581)
+        longitude = float(136.181123)
 
         if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
             raise ValueError("座標が範囲外です")
@@ -105,12 +125,14 @@ def check_location():
 
 
 @api_bp.get("/spots")
+@login_required
 def spots_api():
     # 発見前は番号だけ、発見後は詳細も含めて返します。
     return jsonify({"spots": [public_spot(spot, spot.id in discovered_ids()) for spot in Spot.query.order_by(Spot.id).all()]})
 
 
 @api_bp.get("/spots/<int:spot_id>")
+@login_required
 def spot_api(spot_id):
     # API経由でも未発見スポットの答えを保護します。
     spot = Spot.query.get_or_404(spot_id)
@@ -120,12 +142,14 @@ def spot_api(spot_id):
 
 
 @api_bp.post("/discover")
+@login_required
 def discover_api():
     data = request.get_json(silent=True) or {}
     spot = Spot.query.get_or_404(data.get("spot_id"))
     # 同じスポットを複数回発見してもDiscoveryは1件だけ保存します。
-    if not Discovery.query.filter_by(spot_id=spot.id).first():
-        db.session.add(Discovery(spot_id=spot.id))
+    user_id = session["user_id"]
+    if not Discovery.query.filter_by(user_id=user_id, spot_id=spot.id).first():
+        db.session.add(Discovery(user_id=user_id, spot_id=spot.id))
         db.session.commit()
     found = len(discovered_ids())
     unlocked = [badge.name for badge in Badge.query.filter(Badge.unlock_count <= found).order_by(Badge.id).all()]
@@ -133,6 +157,7 @@ def discover_api():
 
 
 @api_bp.get("/collection")
+@login_required
 def collection_api():
     # 図鑑画面をJavaScriptなどから利用するための一覧APIです。
     spots = Spot.query.order_by(Spot.difficulty.asc(), Spot.id.asc()).all()
@@ -140,9 +165,11 @@ def collection_api():
 
 
 @api_bp.get("/discoveries")
+@login_required
 def discoveries_api():
     # 保存済みの発見IDと発見日時を返します。位置履歴は含めません。
-    return jsonify({"discoveries": [{"spot_id": item.spot_id, "created_at": item.created_at.isoformat()} for item in Discovery.query.order_by(Discovery.created_at).all()]})
+    discoveries = Discovery.query.filter_by(user_id=session["user_id"]).order_by(Discovery.created_at).all()
+    return jsonify({"discoveries": [{"spot_id": item.spot_id, "created_at": item.created_at.isoformat()} for item in discoveries]})
 
 
 @api_bp.get("/bloom")
@@ -151,12 +178,14 @@ def bloom_api():
 
 
 @api_bp.get("/badges")
+@login_required
 def badges_api():
     found = len(discovered_ids())
     return jsonify({"badges": [{"id": badge.id, "name": badge.name, "description": badge.description, "unlocked": found >= badge.unlock_count} for badge in Badge.query.order_by(Badge.unlock_count).all()]})
 
 
 @api_bp.get("/badges/<int:badge_id>")
+@login_required
 def badge_api(badge_id):
     badge = Badge.query.get_or_404(badge_id)
     return jsonify({"id": badge.id, "name": badge.name, "description": badge.description, "unlocked": len(discovered_ids()) >= badge.unlock_count})

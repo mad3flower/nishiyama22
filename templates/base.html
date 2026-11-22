@@ -28,7 +28,7 @@
   <main class="app-shell {% block shell_class %}{% endblock %}">
     {% block content %}{% endblock %}
   </main>
-  {% if request.endpoint != 'main.splash' %}{% include 'partials/bottom_nav.html' %}{% endif %}
+  {% if request.endpoint not in ['main.splash', 'main.login', 'main.register'] %}{% include 'partials/bottom_nav.html' %}{% endif %}
   <div id="toast" class="toast-message" role="status"></div>
   {% block scripts %}{% endblock %}
   <script src="{{ url_for('static', filename='app.js') }}"></script>

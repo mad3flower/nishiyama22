@@ -12,7 +12,12 @@
   <h1>{{ spot.name }}</h1>
   <p class="eyebrow">見どころ</p>
   <p>{{ spot.hint }}</p>
-  <hr>
+  <hr {% if spot.id == 2 %}style="margin-bottom:8px"{% endif %}>
+  {% if spot.id == 2 %}
+  <figure style="margin:0 0 32px;overflow:hidden;border-radius:16px;background:#f6f8fb">
+    <img style="display:block;width:100%;height:auto" src="{{ url_for('static', filename='img/nishiyama_visitors.svg') }}" alt="道の駅西山公園の年度別入場者数。令和6年度341,657人、令和7年度339,716人。">
+  </figure>
+  {% endif %}
   <p class="eyebrow">もっと知る</p>
   <p class="lead">{{ spot.fact }}</p>
   {% if spot.id in [2, 3, 4] %}{% include 'partials/open_data_credit.html' %}{% endif %}

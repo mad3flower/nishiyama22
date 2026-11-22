@@ -38,6 +38,28 @@ def migrate_schema():
     if "difficulty" not in columns:
         with db.engine.begin() as connection:
             connection.execute(text("ALTER TABLE spot ADD COLUMN difficulty INTEGER NOT NULL DEFAULT 1"))
+    if "discovery" in inspector.get_table_names():
+        discovery_columns = {column["name"] for column in inspector.get_columns("discovery")}
+        with db.engine.begin() as connection:
+            table_sql = connection.execute(text("SELECT sql FROM sqlite_master WHERE type='table' AND name='discovery'")).scalar() or ""
+            legacy_unique_spot = "UNIQUE (spot_id)" in table_sql or "UNIQUE(spot_id)" in table_sql
+            if "user_id" not in discovery_columns or legacy_unique_spot:
+                user_column = "user_id" if "user_id" in discovery_columns else "NULL"
+                connection.execute(text("""
+                    CREATE TABLE discovery_user_scoped (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        user_id INTEGER,
+                        spot_id INTEGER NOT NULL,
+                        created_at DATETIME NOT NULL,
+                        CONSTRAINT uq_discovery_user_spot UNIQUE (user_id, spot_id),
+                        FOREIGN KEY(user_id) REFERENCES user (id),
+                        FOREIGN KEY(spot_id) REFERENCES spot (id)
+                    )
+                """))
+                connection.execute(text(f"INSERT INTO discovery_user_scoped (id, user_id, spot_id, created_at) SELECT id, {user_column}, spot_id, created_at FROM discovery"))
+                connection.execute(text("DROP TABLE discovery"))
+                connection.execute(text("ALTER TABLE discovery_user_scoped RENAME TO discovery"))
+            connection.execute(text("CREATE INDEX IF NOT EXISTS ix_discovery_user_id ON discovery (user_id)"))
 
 
 def seed_database():

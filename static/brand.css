@@ -10,3 +10,7 @@
 .photo-5{background-image:url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=85')!important}
 .photo-6,.photo-8{background-image:url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1000&q=85')!important}
 .photo-7{background-image:url('/static/img/home-tsutsuji.jpg')!important}
+.mission-audio-help{margin:4px 0 14px;color:var(--muted);font-size:13px}.mission-audio-picker{display:grid;gap:10px}.mission-audio-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:15px;font-size:13px;font-weight:700}.mission-audio-select{max-width:150px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text)}.mission-audio-actions{display:flex;gap:9px;margin-top:5px}.mission-audio-actions .btn{flex:1}.mission-audio-status{min-height:20px;margin:0;color:var(--muted);font-size:12px}
+.mission-audio-choice{width:18px;height:18px;accent-color:var(--primary)}.mission-audio-row{cursor:pointer}.mission-audio-row:has(.mission-audio-choice:checked){border-color:var(--primary);background:#FFF0F4}
+.mission-audio-description{margin:0;padding:12px 14px;border-radius:14px;background:#FFF8DF;color:#6E5717;font-size:13px;font-weight:700;line-height:1.7}
+.mission-audio-playback{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.mission-audio-playback .mission-audio-description{flex:1}.mission-audio-playback .mission-audio-status{flex-shrink:0}

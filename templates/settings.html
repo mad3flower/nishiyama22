@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 {% block title %}設定 | レッツさぁ西山！{% endblock %}
 {% block content %}
-<header class="topbar"><div><p class="eyebrow mb-1">西山公園 音の宝探し</p><h1 class="page-title">設定</h1></div><span></span></header><section class="settings-list"><label class="setting-row"><span><i class="bi bi-bell-fill"></i><span>通知設定</span></span><input class="form-check-input" type="checkbox" checked></label><label class="setting-row"><span><i class="bi bi-volume-up-fill"></i><span>音の設定</span></span><input class="form-check-input" type="checkbox" checked></label><div class="setting-row static"><span><i class="bi bi-info-circle-fill"></i><span>アプリについて</span></span><span class="muted small">1.0.0</span></div></section><section class="about-block"><i class="bi bi-headphones"></i><p>レッツさぁ西山！</p><small>音をたよりに、西山公園の魅力を見つけよう</small></section>
+<header class="topbar"><div><p class="eyebrow mb-1">西山公園 音の宝探し</p><h1 class="page-title">設定</h1></div><span></span></header><section class="settings-list"><label class="setting-row"><span><i class="bi bi-bell-fill"></i><span>通知設定</span></span><input class="form-check-input" type="checkbox" checked></label><label class="setting-row"><span><i class="bi bi-volume-up-fill"></i><span>音の設定</span></span><input class="form-check-input" type="checkbox" checked></label><div class="setting-row static"><span><i class="bi bi-info-circle-fill"></i><span>アプリについて</span></span><span class="muted small">1.2.0</span></div></section><section class="about-block"><i class="bi bi-headphones"></i><p>レッツさぁ西山！</p><small>音をたよりに、西山公園の魅力を見つけよう</small></section>
+<section class="logout-panel" aria-labelledby="logout-title">
+  <div class="logout-copy">
+    <h2 id="logout-title">アカウント</h2>
+    <p>このサービスからログアウトします。</p>
+  </div>
+  <form method="post" action="{{ url_for('main.logout') }}">
+    <button class="logout-button" type="submit">
+      <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+      <span>ログアウト</span>
+    </button>
+  </form>
+</section>
 <section class="settings-reset">
   <h2>図鑑データ</h2>
   <p>発見したスポットの記録をすべて消去します。</p>
