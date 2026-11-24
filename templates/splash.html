@@ -14,8 +14,8 @@
     {% endwith %}
     <form method="post" action="{{ url_for('main.register' if show_register else 'main.login') }}" class="login-form">
       <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
-      <label for="email">メールアドレス</label>
-      <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" value="{{ request.form.get('email', '') }}">
+      <label for="login_id">ユーザーID</label>
+      <input id="login_id" name="login_id" type="text" autocomplete="username" required maxlength="254" value="{{ request.form.get('login_id', '') }}">
       <label for="password">パスワード（8文字以上）</label>
       <input id="password" name="password" type="password" autocomplete="{% if show_register %}new-password{% else %}current-password{% endif %}" required minlength="8">
       {% if show_register %}

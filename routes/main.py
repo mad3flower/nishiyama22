@@ -1,5 +1,6 @@
 import random
 from functools import wraps
+from pathlib import Path
 from urllib.parse import urlparse
 
 from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
@@ -18,6 +19,32 @@ AUDIO_DESCRIPTIONS = {
     7: "鳥のさえずりや、木々に囲まれた場所の環境音が聞こえます。",
     8: "橋の上を通る足音や、周囲の環境音が聞こえます。",
 }
+
+AUDIO_DAYPARTS = (
+    ("morning", "朝（音声1）"),
+    ("day", "昼（音声2）"),
+    ("night", "夜（音声3）"),
+)
+
+
+def spot_audio_options(spot):
+    audio_dir = Path(__file__).resolve().parent.parent / "static" / "audio"
+    options = []
+    for daypart, label in AUDIO_DAYPARTS:
+        filename = f"spot{spot.id}_{daypart}.mp3"
+        path = audio_dir / filename
+        if spot.id == 4 and daypart == "day" and not path.is_file():
+            video_audio = audio_dir / "spot4_day.mp4"
+            if video_audio.is_file():
+                filename = video_audio.name
+                path = video_audio
+        if path.is_file():
+            options.append({
+                "label": label,
+                "audio": filename,
+                "description": AUDIO_DESCRIPTIONS.get(spot.id, "周囲の環境音が聞こえます。"),
+            })
+    return options
 
 
 def discovered_ids():
@@ -55,36 +82,36 @@ def splash():
 @main_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
+        login_id = request.form.get("login_id", "").strip().lower()
         password = request.form.get("password", "")
-        if not email or len(email) > 254 or "@" not in email or len(password) < 8:
-            flash("メールアドレスと8文字以上のパスワードを入力してください。", "error")
+        if not login_id or len(login_id) > 254 or len(password) < 8:
+            flash("IDと8文字以上のパスワードを入力してください。", "error")
         else:
-            user = User.query.filter_by(email=email).first()
+            user = User.query.filter_by(login_id=login_id).first()
             if user and user.check_password(password):
                 session.clear()
                 session["user_id"] = user.id
                 return redirect(_safe_next_url())
-            flash("メールアドレスまたはパスワードが正しくありません。", "error")
+            flash("IDまたはパスワードが正しくありません。", "error")
     return render_template("splash.html", user=None, show_login=True)
 
 
 @main_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
+        login_id = request.form.get("login_id", "").strip().lower()
         password = request.form.get("password", "")
         password_confirm = request.form.get("password_confirm", "")
-        if not email or len(email) > 254 or "@" not in email:
-            flash("有効なメールアドレスを入力してください。", "error")
+        if not login_id or len(login_id) > 254:
+            flash("IDを入力してください。", "error")
         elif len(password) < 8:
             flash("パスワードは8文字以上で入力してください。", "error")
         elif password != password_confirm:
             flash("確認用パスワードが一致しません。", "error")
-        elif User.query.filter_by(email=email).first():
-            flash("このメールアドレスは既に使用されています。別のメールアドレスを選択してください。", "error")
+        elif User.query.filter_by(login_id=login_id).first():
+            flash("このIDは既に使用されています。別のIDを選択してください。", "error")
         else:
-            user = User(email=email)
+            user = User(login_id=login_id)
             user.set_password(password)
             db.session.add(user)
             db.session.commit()
@@ -113,7 +140,7 @@ def logout():
 def home():
     # 探索開始ボタンと図鑑への導線を表示します。
     user = db.session.get(User, session["user_id"])
-    username = user.email.partition("@")[0] if user else ""
+    username = user.login_id if user else ""
     return render_template("home.html", username=username)
 
 
@@ -124,24 +151,7 @@ def mission():
     found_ids = discovered_ids()
     spot = next_mission_spot(found_ids)
     session["mission_spot_id"] = spot.id if spot else None
-    audio_options = []
-    if spot:
-        audio_spots = Spot.query.filter(Spot.audio.isnot(None)).order_by(Spot.id.asc()).all()
-        # 正解の音を含めた3つを初期候補にし、残りも選択できるようにします。
-        decoys = [item for item in audio_spots if item.id != spot.id]
-        random.shuffle(decoys)
-        selected = [spot] + decoys[:2]
-        random.shuffle(audio_spots)
-        audio_options = [
-            {"id": item.id, "label": f"音声{index + 1}", "audio": item.audio, "description": AUDIO_DESCRIPTIONS.get(item.id, "周囲の環境音が聞こえます。")}
-            for index, item in enumerate(audio_spots)
-        ]
-        selected_ids = [item.id for item in selected]
-        random.shuffle(selected_ids)
-    else:
-        selected_ids = []
-    option_by_id = {option["id"]: option for option in audio_options}
-    selected_audio_options = [option_by_id[spot_id] for spot_id in selected_ids]
+    selected_audio_options = spot_audio_options(spot) if spot else []
     return render_template("mission.html", spot=spot, selected_audio_options=selected_audio_options)
 
 
@@ -156,19 +166,7 @@ def explore():
         found_ids = discovered_ids()
         spot = next_mission_spot(found_ids)
         session["mission_spot_id"] = spot.id if spot else None
-    selected_audio_options = []
-    if spot:
-        audio_spots = Spot.query.filter(Spot.audio.isnot(None)).order_by(Spot.id.asc()).all()
-        decoys = [item for item in audio_spots if item.id != spot.id]
-        random.shuffle(decoys)
-        selected_ids = [spot.id] + [item.id for item in decoys[:2]]
-        random.shuffle(audio_spots)
-        option_by_id = {
-            item.id: {"id": item.id, "label": f"音声{index + 1}", "audio": item.audio, "description": AUDIO_DESCRIPTIONS.get(item.id, "周囲の環境音が聞こえます。")}
-            for index, item in enumerate(audio_spots)
-        }
-        random.shuffle(selected_ids)
-        selected_audio_options = [option_by_id[item_id] for item_id in selected_ids]
+    selected_audio_options = spot_audio_options(spot) if spot else []
     return render_template("explore.html", spot=spot, selected_audio_options=selected_audio_options)
 
 

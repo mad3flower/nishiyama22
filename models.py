@@ -9,7 +9,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(254), unique=True, nullable=False, index=True)
+    login_id = db.Column(db.String(254), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(256), nullable=False)
 
     def set_password(self, password):

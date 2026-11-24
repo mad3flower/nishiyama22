@@ -10,7 +10,7 @@
 <div class="mission-photo" style="background-image: url('{{ url_for('static', filename='img/mission-clue.svg') }}')"><span>{{ spot.category }}</span><strong class="difficulty-badge">見つけやすさ Lv.{{ spot.difficulty }}</strong></div>
 <section class="mission-intro animate-fade-in">
   <p class="eyebrow accent-text">今日の音</p>
-  <p class="mission-audio-help">3つの音声から1つを選んで再生できます。</p>
+  <p class="mission-audio-help">{% if selected_audio_options|length == 3 %}朝・昼・夜の音声から1つを選んで再生できます。{% else %}登録済みの時間帯の音声を選んで再生できます。{% endif %}</p>
   <div class="mission-audio-picker" id="mission-audio-picker">
     {% for option in selected_audio_options %}
     <label class="mission-audio-row">

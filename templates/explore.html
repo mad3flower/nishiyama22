@@ -21,7 +21,7 @@
   <p id="location-message" class="muted">現在地を取得しています...</p>
   {% if spot %}
   <div class="explore-audio-picker mission-audio-picker" id="mission-audio-picker">
-    <p class="mission-audio-help">3つの音声から1つを選んで再生できます。</p>
+    <p class="mission-audio-help">{% if selected_audio_options|length == 3 %}朝・昼・夜の音声から1つを選んで再生できます。{% else %}登録済みの時間帯の音声を選んで再生できます。{% endif %}</p>
     {% for option in selected_audio_options %}
     <label class="mission-audio-row">
       <input class="mission-audio-choice" type="radio" name="mission-audio" value="{{ option.audio }}" data-description="{{ option.description }}" {% if loop.first %}checked{% endif %}>

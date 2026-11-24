@@ -29,6 +29,13 @@ def migrate_schema():
     from sqlalchemy import inspect, text
 
     inspector = inspect(db.engine)
+    if "user" in inspector.get_table_names():
+        user_columns = {column["name"] for column in inspector.get_columns("user")}
+        if "login_id" not in user_columns and "email" in user_columns:
+            with db.engine.begin() as connection:
+                connection.execute(text("ALTER TABLE user RENAME COLUMN email TO login_id"))
+        elif "login_id" not in user_columns:
+            raise RuntimeError("The user table has neither a login_id nor a legacy email column.")
     if "spot" not in inspector.get_table_names():
         return
     columns = {column["name"] for column in inspector.get_columns("spot")}

@@ -2,7 +2,7 @@
 {% block title %}ホーム | レッツさぁ西山！{% endblock %}
 {% block content %}
 <header class="home-header"><img class="official-logo home-logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="レッツさぁ西山！"><div class="home-header-user"><span>ようこそ　{{ username }}さん</span><a class="icon-button" href="{{ url_for('main.settings') }}" aria-label="設定"><i class="bi bi-gear"></i></a></div></header>
-<section class="home-hero-v21 animate-slide-up"><div class="home-hero-title"><p>西山公園</p><h1>レッツさぁ西山！</h1><span>音をたよりに、<br>西山公園の魅力を見つけよう</span></div></section>
+<section class="home-hero-v21 animate-slide-up"><div class="home-hero-title"><p>日本の歴史公園100選 西山公園</p><h1>レッツさぁ西山！</h1><span>音をたよりに、<br>西山公園の魅力を見つけよう</span></div></section>
 <section class="home-action-panel home-action-only animate-slide-up delay-1"><div class="home-actions"><a class="btn btn-accent" href="{{ url_for('main.mission') }}">ミッションをはじめる <i class="bi bi-arrow-right"></i></a><a class="btn btn-outline-primary" href="{{ url_for('main.collection') }}">スポット図鑑 <i class="bi bi-book"></i></a></div></section>
 {% endblock %}
 
